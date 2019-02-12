@@ -1,8 +1,6 @@
 import java.io.IOException;
 import java.io.Reader;
 
-import com.sun.source.tree.WhileLoopTree;
-
 public class AnalizadorLexico {
 
 	private Reader input; // flujo de entrada
@@ -20,7 +18,7 @@ public class AnalizadorLexico {
 	enum Estado {
 		INICIO, REC_POR, REC_DIV, REC_PAP, REC_PCIERR, REC_PUNTOCOMA, REC_PUNTO, REC_IGUAL, REC_EQUIVALENTE,
 		REC_MAYOR, REC_MENOR, REC_MAYIGUAL, REC_MENIGUAL, REC_MAS, REC_MENOS, REC_ID, REC_ENT, 
-		REC_DEC, REC_EXP, REC_SEPARADOR, REC_DIFERENTE, REC_EOF
+		REC_DEC, REC_EXP, REC_SEPA1, REC_SEPA2, REC_DIF1, REC_DIF2, REC_EOF
 	}
 	
 	public AnalizadorLexico(Reader input) throws IOException {
@@ -56,8 +54,8 @@ public class AnalizadorLexico {
 					else if (hayPuntoComa()) transita(Estado.REC_PUNTOCOMA);
 					else if (haySep()) transitaIgnorando(Estado.INICIO);
              	 	else if (hayEOF()) transita(Estado.REC_EOF);
-             	 	else if (haySeparador()) transita(Estado.REC_SEPARADOR);
-             	 	else if(hayExclamacion()) transita(Estado.REC_DIFERENTE);
+             	 	else if (haySeparador()) transita(Estado.REC_SEPA1);
+             	 	else if(hayExclamacion()) transita(Estado.REC_DIF1);
               		else error();
 					break;
 				case REC_ID:
@@ -108,9 +106,17 @@ public class AnalizadorLexico {
 		        	break;
 		        case REC_EQUIVALENTE: 
 		        	return unidadEquivalente();
-		        case REC_DIFERENTE:
+		        case REC_DIF1:
+		        	if(hayIgual()) transita(Estado.REC_DIF2);
+		        	else error(); 
+		        	break;
+		        case REC_DIF2:
 		        	return unidadDiferente();
-				case REC_SEPARADOR:
+				case REC_SEPA1:
+					if(haySeparador()) transita(Estado.REC_SEPA2);
+					else error();
+					break;
+				case REC_SEPA2:
 					return unidadSeparador();
 				case REC_PUNTO:
 					return unidadPunto();
