@@ -16,7 +16,7 @@ public class AnalizadorLexico {
 	
 	
 	enum Estado {
-		INICIO, REC_POR, REC_DIV, REC_PAP, REC_PCIERR, REC_PUNTOCOMA, REC_PUNTO, REC_IGUAL, REC_EQUIVALENTE,
+		INICIO, REC_POR, REC_DIV, REC_PAP, REC_PCIERR, REC_PUNTOCOMA, REC_IGUAL, REC_EQUIVALENTE,
 		REC_MAYOR, REC_MENOR, REC_MAYIGUAL, REC_MENIGUAL, REC_MAS, REC_MENOS, REC_ID, REC_ENT, 
 		REC_DEC, REC_EXP, REC_SEPA1, REC_SEPA2, REC_DIF1, REC_DIF2, REC_EOF
 	}
@@ -50,7 +50,6 @@ public class AnalizadorLexico {
 					else if (hayIgual()) transita(Estado.REC_IGUAL);
 					else if (hayMayor()) transita(Estado.REC_MAYOR);
 					else if (hayMenor()) transita(Estado.REC_MENOR);
-					else if (hayPunto()) transita(Estado.REC_PUNTO);
 					else if (hayPuntoComa()) transita(Estado.REC_PUNTOCOMA);
 					else if (haySep()) transitaIgnorando(Estado.INICIO);
              	 	else if (hayEOF()) transita(Estado.REC_EOF);
@@ -118,8 +117,6 @@ public class AnalizadorLexico {
 					break;
 				case REC_SEPA2:
 					return unidadSeparador();
-				case REC_PUNTO:
-					return unidadPunto();
 				case REC_PUNTOCOMA:
 					return unidadPuntoComa();
 				case REC_EOF: return unidadEof();
@@ -294,9 +291,6 @@ public class AnalizadorLexico {
 	}
 	private UnidadLexica unidadPuntoComa() {
 	     return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.PUNTOCOMA);     
-	}
-	private UnidadLexica unidadPunto() {
-	     return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.PUNTO);     
 	}
 	private UnidadLexica unidadEof() {
 	     return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.EOF);     
