@@ -232,6 +232,10 @@ public class AnalizadorLexico {
 	        	return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.AND);
 	         case "not": 
 	        	return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.NOT);
+	         case "true":
+	        	 return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.TRUE);
+	         case "false":
+	        	 return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.FALSE);
 	         default:    
 	            return new UnidadLexicaMultivaluada(filaInicio,columnaInicio,ClaseLexica.IDEN,lexema.toString());     
 	      }

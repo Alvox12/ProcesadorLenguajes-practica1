@@ -1,0 +1,7 @@
+bool prueba1;
+bool prueba2;
+num n
+&&
+n = 10 + -7.52e9;
+prueba1 = (n < -9);
+prueba2 = (prueba1 != false) and (n > -2000)
