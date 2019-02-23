@@ -1,0 +1,6 @@
+num cantidad;
+num peso;
+bool capacidadMax
+&&
+cantidad = peso * 3.62;
+capacidadMax = cantidad >* 3.69 * 5

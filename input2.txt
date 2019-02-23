@@ -1,5 +1,5 @@
 bool rico;
 num sueldo
 &&
-sueldo = 40 * 5 * 2E2;
+sueldo = 40 * 5 * 2E-2;
 rico = (sueldo >= +6000)

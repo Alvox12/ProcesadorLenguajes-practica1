@@ -1,0 +1,5 @@
+num h;
+bool prueba
+&
+h = 33 - (3 * 6);
+prueba = (h < 20)

@@ -6,7 +6,7 @@ import java.io.Reader;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		Reader input = new InputStreamReader(new FileInputStream("input4.txt"));
+		Reader input = new InputStreamReader(new FileInputStream("input6.txt"));
 		AnalizadorLexico al = new AnalizadorLexico(input);
 		UnidadLexica unidad;
 		do {

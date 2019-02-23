@@ -3,15 +3,14 @@ import java.io.Reader;
 
 public class AnalizadorLexico {
 
-	private Reader input; // flujo de entrada
-	private StringBuffer lexema; // cadena para almacenar el lexema de la
-	// u. l�xica
-	private int sigCar; // siguiente car�cter a procesar
-	private int filaInicio; // fila inicio de la u. l�xica
-	private int columnaInicio; // col. inicio de la u. l�xica
+	private Reader input; 
+	private StringBuffer lexema; 
+	private int sigCar; 
+	private int filaInicio; 
+	private int columnaInicio; 
 	private int filaActual;
 	private int columnaActual;
-	private Estado estado; // estado del aut�mata
+	private Estado estado;
 	private static String NL = System.getProperty("line.separator");
 	
 	
@@ -31,7 +30,6 @@ public class AnalizadorLexico {
 
 	public UnidadLexica sigToken() throws IOException {
 		
-		// Fase de inicializaci�n
 		estado = Estado.INICIO;
 		filaInicio = filaActual;
 		columnaInicio = columnaActual;
@@ -55,7 +53,7 @@ public class AnalizadorLexico {
              	 	else if (hayEOF()) transita(Estado.REC_EOF);
              	 	else if (haySeparador()) transita(Estado.REC_SEPA1);
              	 	else if(hayExclamacion()) transita(Estado.REC_DIF1);
-              		else error();
+              		else error("Caracter inesperado");
 					break;
 				case REC_ID:
 					if (hayLetra() || hayDigito() || hayBarrabaja()) transita(Estado.REC_ID);
@@ -87,10 +85,12 @@ public class AnalizadorLexico {
 		            break;
 				case REC_MAYOR: 
 					if(hayIgual()) transita(Estado.REC_MAYIGUAL);
+					else if(!haySep()) error("Símbolo que sucede a > erroneo");
 					else return unidadMayor();
 					break;
 				case REC_MENOR: 
 					if(hayIgual()) transita(Estado.REC_MENIGUAL);
+					else if(!haySep()) error("Símbolo que sucede a < erroneo");
 					else return unidadMenor();
 					break;
 				case REC_MAYIGUAL: return unidadMayorIgual();
@@ -101,19 +101,20 @@ public class AnalizadorLexico {
 		        case REC_PCIERR: return unidadPCierre();
 		        case REC_IGUAL: 
 		        	if(hayIgual()) transita(Estado.REC_EQUIVALENTE);
+		        	else if(!haySep()) error("Símbolo que sucede a = erroneo");
 		        	else return unidadIgual();
 		        	break;
 		        case REC_EQUIVALENTE: 
 		        	return unidadEquivalente();
 		        case REC_DIF1:
 		        	if(hayIgual()) transita(Estado.REC_DIF2);
-		        	else error(); 
+		        	else error("Debería seguir el símbolo =, por lo tanto es errorneo."); 
 		        	break;
 		        case REC_DIF2:
 		        	return unidadDiferente();
 				case REC_SEPA1:
 					if(haySeparador()) transita(Estado.REC_SEPA2);
-					else error();
+					else error("Debería seguir el símbolo &, por lo tanto es errorneo.");
 					break;
 				case REC_SEPA2:
 					return unidadSeparador();
@@ -154,7 +155,7 @@ public class AnalizadorLexico {
 		for (int i = 1; i < NL.length(); i++) {
 			sigCar = input.read();
 			if (sigCar != NL.charAt(i))
-				error();
+				error("Caracter inesperado");
 		}
 		sigCar = '\n';
 	}
@@ -282,10 +283,10 @@ public class AnalizadorLexico {
 	     return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.MENOR);     
 	}
 	private UnidadLexica unidadMayorIgual() {
-	     return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.MAYIGUAL);     
+	     return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.MAYORIGUAL);     
 	} 
 	private UnidadLexica unidadMenorIgual() {
-	     return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.MENIGUAL);     
+	     return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.MENORIGUAL);     
 	} 
 	private UnidadLexica unidadIgual() {
 	     return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.IGUAL);     
@@ -300,11 +301,15 @@ public class AnalizadorLexico {
 	     return new UnidadLexicaUnivaluada(filaInicio,columnaInicio,ClaseLexica.EOF);     
 	}
 
-	private void error() {
-		System.err.println("(" + filaActual + ',' + columnaActual + "):Caracter inexperado");
+	/*private void error() {
+		System.err.println("(" + filaActual + ',' + columnaActual + "):Caracter inesperado");
+		System.exit(1);
+	}*/
+
+	private void error(String mensaje) {
+		System.err.println("(" + filaActual + ',' + columnaActual + ")" + " " + mensaje);
 		System.exit(1);
 	}
-
 
 }
 
