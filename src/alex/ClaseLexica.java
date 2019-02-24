@@ -1,3 +1,4 @@
+package alex;
 
 public enum ClaseLexica {
 	IDEN, ENT, REAL, PAP, PCIERRE, IGUAL, EQUIVALENTE, PUNTOCOMA,
